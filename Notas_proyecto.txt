@@ -19,5 +19,13 @@ Crear la imagen en docker:  docker build -t alejo1992/cloud-api:latest .
 Guardar la imagen en docker como .tar: docker save -o devops-api.tar alejo1992/cloud-api:latest
 
 
+Comandos Docker:
+
+Asignar nombre al contenedor al correr: docker run --name mi_contenedor -it <nombre-de-la-imagen>
+Correr imagen exponiendo puerto: docker run -p 8080:80 <nombre-de-la-imagen>
+Ejecutar en segundo plano: docker run -d <nombre-de-la-imagen>
+Correr el contenedor a partir de una imagen: docker run -it <nombre-de-la-imagen>
+Para bajar la imagen desde docker hub: docker pull <nombre-de-la-imagen>
+
 
 
