@@ -5,72 +5,47 @@ import bodyParser from "body-parser";
 const app = express();
 app.use(bodyParser.json());
 
-const readData = () => {
-  try {
-    const data = fs.readFileSync("./db.json");
-    return JSON.parse(data);
-  } catch (error) {
-    console.log(error);
-  }
-};
+app.all('/DevOps', (req, res) => {
 
-const writeData = (data) => {
-  try {
-    fs.writeFileSync("./db.json", JSON.stringify(data));
-  } catch (error) {
-    console.log(error);
-  }
-};
+    // Solo permitir método POST
+    if (req.method !== 'POST') {
+        return res.status(400).json({ error: "ERROR" });
+    }
 
-app.get("/", (req, res) => {
-  res.send("Welcome to my first API with Node js!");
+    const expectedBody = {
+        message: "This is a test",
+        to: "Juan Perez",
+        from: "Rita Asturia",
+        timeToLifeSec: 45
+    };
+
+    const body = req.body;
+
+    // Validación EXACTA del body
+    const isValid =
+        body &&
+        body.message === expectedBody.message &&
+        body.to === expectedBody.to &&
+        body.from === expectedBody.from &&
+        body.timeToLifeSec === expectedBody.timeToLifeSec &&
+        Object.keys(body).length === 4;
+
+    if (!isValid) {
+        return res.status(400).json({ error: "ERROR" });
+    }
+
+    // Respuesta válida
+    return res.status(200).json({
+        message: `Hello ${body.to} your message will be sent`
+    });
 });
 
-app.get("/books", (req, res) => {
-  const data = readData();
-  res.json(data.books);
+// Cualquier otra ruta devuelve error
+app.use((req, res) => {
+    res.status(400).json({ error: "ERROR" });
 });
 
-app.get("/books/:id", (req, res) => {
-  const data = readData();
-  const id = parseInt(req.params.id);
-  const book = data.books.find((book) => book.id === id);
-  res.json(book);
-});
 
-app.post("/books", (req, res) => {
-  const data = readData();
-  const body = req.body;
-  const newBook = {
-    id: data.books.length + 1,
-    ...body,
-  };
-  data.books.push(newBook);
-  writeData(data);
-  res.json(newBook);
-});
-
-app.put("/books/:id", (req, res) => {
-  const data = readData();
-  const body = req.body;
-  const id = parseInt(req.params.id);
-  const bookIndex = data.books.findIndex((book) => book.id === id);
-  data.books[bookIndex] = {
-    ...data.books[bookIndex],
-    ...body,
-  };
-  writeData(data);
-  res.json({ message: "Book updated successfully" });
-});
-
-app.delete("/books/:id", (req, res) => {
-  const data = readData();
-  const id = parseInt(req.params.id);
-  const bookIndex = data.books.findIndex((book) => book.id === id);
-  data.books.splice(bookIndex, 1);
-  writeData(data);
-  res.json({ message: "Book deleted successfully" });
-});
 
 app.listen(3000, () => {
   console.log("Server listening on port 3000");
