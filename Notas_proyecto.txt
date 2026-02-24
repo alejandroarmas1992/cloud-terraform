@@ -1,0 +1,23 @@
+Prueba de la API
+
+Puerto 3000
+
+curl -X POST http://localhost:3000/DevOps \
+-H "Content-Type: application/json" \
+-d '{
+  "message": "This is a test",
+  "to": "Juan Perez",
+  "from": "Rita Asturia",
+  "timeToLifeSec": 45
+}'
+
+curl -X GET http://localhost:3000/DevOps
+
+
+Crear la imagen en docker:  docker build -t alejo1992/cloud-api:latest .
+
+Guardar la imagen en docker como .tar: docker save -o devops-api.tar alejo1992/cloud-api:latest
+
+
+
+
